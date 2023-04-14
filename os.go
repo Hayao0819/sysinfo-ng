@@ -6,13 +6,13 @@ package sysinfo
 
 import (
 	"bufio"
-	"fmt"
+	//"fmt"
 	"os"
 	"regexp"
 	"runtime"
 	"strings"
 
-	"github.com/blabber/go-freebsd-sysctl/sysctl"
+	//"github.com/blabber/go-freebsd-sysctl/sysctl"
 )
 
 // OS information.
@@ -34,8 +34,6 @@ var (
 )
 
 func (si *SysInfo) getOSInfo() {
-	fmt.Println(sysctl.GetString("kern.osrevision"))
-
 	// This seems to be the best and most portable way to detect OS architecture (NOT kernel!)
 	if _, err := os.Stat("/lib64/ld-linux-x86-64.so.2"); err == nil {
 		si.OS.Architecture = "amd64"
@@ -45,7 +43,7 @@ func (si *SysInfo) getOSInfo() {
 
 	if strings.ToLower(runtime.GOOS) == "darwin"{
 		// darwinの処理を書く
-		
+
 	}else if _, err := os.Stat("/etc/os-release"); err !=nil{
 		si.getOSInfoFromOsRelease()
 	}
