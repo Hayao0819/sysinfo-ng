@@ -6,13 +6,18 @@ package sysinfo
 
 import (
 	"bufio"
+	//"bytes"
+	//"fmt"
+
 	//"fmt"
 	//"fmt"
 	"os"
 	"regexp"
 	"runtime"
 	"strings"
+
 	//"github.com/blabber/go-freebsd-sysctl/sysctl"
+	"howett.net/plist"
 )
 
 // OS information.
@@ -34,16 +39,10 @@ var (
 )
 
 func (si *SysInfo) getOSInfo() {
-	// This seems to be the best and most portable way to detect OS architecture (NOT kernel!)
-	if _, err := os.Stat("/lib64/ld-linux-x86-64.so.2"); err == nil {
-		si.OS.Architecture = "amd64"
-	} else if _, err := os.Stat("/lib/ld-linux.so.2"); err == nil {
-		si.OS.Architecture = "i386"
-	}
 
 	if strings.ToLower(runtime.GOOS) == "darwin"{
 		// darwinの処理を書く
-
+		si.getOSInfoFromDarwin()
 	}else if _, err := os.Stat("/etc/os-release"); err ==  nil{
 		si.getOSInfoFromOsRelease()
 	}
@@ -51,7 +50,49 @@ func (si *SysInfo) getOSInfo() {
 }
 
 
+func (si *SysInfo)getOSInfoFromDarwin(){
+	sysinfo := struct{
+		BuildID string `plist:"BuildID"`
+		ProductBuildVersion string `plist:"ProductBuildVersion"`
+		ProductCopyright string `plist:"ProductCopyright"`
+		ProductName string `plist:"ProductName"`
+		ProductUserVisibleVersion string `plist:"ProductUserVisibleVersion"`
+		ProductVersion string `plist:"ProductVersion"`
+		IOSSupportVersion string `plist:"iOSSupportVersion"`
+	}{}
+
+	sysxml, err := os.Open("/System/Library/CoreServices/SystemVersion.plist") 
+	if err !=nil{
+		return
+	}
+	decoder := plist.NewDecoder(sysxml)
+	if err := decoder.Decode(&sysinfo); err !=nil{
+		return
+	}
+
+	si.OS.Name=sysinfo.ProductName
+	si.OS.Vendor=strings.ToLower(sysinfo.ProductName)
+	si.OS.Release=sysinfo.ProductVersion
+	si.OS.Architecture=runtime.GOARCH
+	
+
+	/*
+	fmt.Println(sysinfo.ProductVersion)
+	fmt.Println(sysctl.GetString("hw.model"))
+	fmt.Println(sysctl.GetString("hw.vendor"))
+	fmt.Println(sysctl.GetString("hw.product"))
+	*/
+}
+
 func (si *SysInfo)getOSInfoFromOsRelease(){
+	// This seems to be the best and most portable way to detect OS architecture (NOT kernel!)
+	if _, err := os.Stat("/lib64/ld-linux-x86-64.so.2"); err == nil {
+		si.OS.Architecture = "amd64"
+	} else if _, err := os.Stat("/lib/ld-linux.so.2"); err == nil {
+		si.OS.Architecture = "i386"
+	}
+
+
 	f, err := os.Open("/etc/os-release")
 	if err != nil {
 		return
