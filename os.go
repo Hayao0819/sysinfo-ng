@@ -16,7 +16,6 @@ import (
 	"runtime"
 	"strings"
 
-	//"github.com/blabber/go-freebsd-sysctl/sysctl"
 	"howett.net/plist"
 )
 
@@ -40,7 +39,7 @@ var (
 
 func (si *SysInfo) getOSInfo() {
 
-	if strings.ToLower(runtime.GOOS) == "darwin"{
+	if ostype == "darwin"{
 		// darwinの処理を書く
 		si.getOSInfoFromDarwin()
 	}else if _, err := os.Stat("/etc/os-release"); err ==  nil{

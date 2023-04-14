@@ -11,6 +11,9 @@ import (
 	"os"
 	"strings"
 	"time"
+
+	"github.com/blabber/go-freebsd-sysctl/sysctl"
+	"github.com/thlib/go-timezone-local/tzlocal"
 )
 
 // Node information.
@@ -21,8 +24,19 @@ type Node struct {
 	Timezone   string `json:"timezone,omitempty"`
 }
 
-func (si *SysInfo) getHostname() {
+func (si *SysInfo) getHostnameFromProc() {
 	si.Node.Hostname = slurpFile("/proc/sys/kernel/hostname")
+}
+
+func (si *SysInfo) getHostnameFromSysctl(){
+	kern, _ :=  sysctl.GetString("kern.hostname")
+	kernel, _ := sysctl.GetString("kernel.hostname")
+
+	if len(kern) != 0{
+		si.Node.Hostname = kern
+	}else if len(kernel) != 0{
+		si.Node.Hostname = kernel
+	}
 }
 
 func (si *SysInfo) getSetMachineID() {
@@ -75,7 +89,7 @@ func (si *SysInfo) getSetMachineID() {
 
 func (si *SysInfo) getTimezone() {
 	const zoneInfoPrefix = "/usr/share/zoneinfo/"
-
+	println(0)
 	if fi, err := os.Lstat("/etc/localtime"); err == nil {
 		if fi.Mode()&os.ModeSymlink == os.ModeSymlink {
 			if tzfile, err := os.Readlink("/etc/localtime"); err == nil {
@@ -105,10 +119,20 @@ func (si *SysInfo) getTimezone() {
 			}
 		}
 	}
+
+	// fallback
+	if timezone, err := tzlocal.RuntimeTZ(); err ==nil{
+		si.Node.Timezone=timezone
+	}
 }
 
 func (si *SysInfo) getNodeInfo() {
-	si.getHostname()
+	if ostype == "darwin"{
+		si.getHostnameFromSysctl()
+	}else{
+		si.getHostnameFromProc()
+	}
+
 	si.getSetMachineID()
 	si.getHypervisor()
 	si.getTimezone()
