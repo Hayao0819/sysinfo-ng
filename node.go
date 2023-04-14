@@ -89,7 +89,6 @@ func (si *SysInfo) getSetMachineID() {
 
 func (si *SysInfo) getTimezone() {
 	const zoneInfoPrefix = "/usr/share/zoneinfo/"
-	println(0)
 	if fi, err := os.Lstat("/etc/localtime"); err == nil {
 		if fi.Mode()&os.ModeSymlink == os.ModeSymlink {
 			if tzfile, err := os.Readlink("/etc/localtime"); err == nil {

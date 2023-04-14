@@ -1,6 +1,13 @@
-//+build darwin
+//go:build darwin
+// +build darwin
 
 package sysinfo
+
+import (
+	"runtime"
+
+	"github.com/blabber/go-freebsd-sysctl/sysctl"
+)
 
 // Kernel information.
 type Kernel struct {
@@ -10,4 +17,7 @@ type Kernel struct {
 }
 
 func (si *SysInfo) getKernelInfo() {
+	si.Kernel.Version, _ = sysctl.GetString("kern.version")
+	si.Kernel.Release, _ = sysctl.GetString("kern.osrelease")
+	si.Kernel.Architecture = runtime.GOARCH
 }
