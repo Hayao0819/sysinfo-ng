@@ -7,8 +7,8 @@ package sysinfo
 import (
 	"bytes"
 	"encoding/binary"
-	"io/ioutil"
 	"strconv"
+	"os"
 )
 
 // Memory information.
@@ -31,7 +31,7 @@ func qword(data []byte, index int) uint64 {
 }
 
 func (si *SysInfo) getMemoryInfo() {
-	dmi, err := ioutil.ReadFile("/sys/firmware/dmi/tables/DMI")
+	dmi, err := os.ReadFile("/sys/firmware/dmi/tables/DMI")
 	if err != nil {
 		// Xen hypervisor
 		if targetKB := slurpFile("/sys/devices/system/xen_memory/xen_memory0/target_kb"); targetKB != "" {
