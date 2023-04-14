@@ -7,11 +7,11 @@ package sysinfo
 import (
 	"bufio"
 	//"fmt"
+	//"fmt"
 	"os"
 	"regexp"
 	"runtime"
 	"strings"
-
 	//"github.com/blabber/go-freebsd-sysctl/sysctl"
 )
 
@@ -44,7 +44,7 @@ func (si *SysInfo) getOSInfo() {
 	if strings.ToLower(runtime.GOOS) == "darwin"{
 		// darwinの処理を書く
 
-	}else if _, err := os.Stat("/etc/os-release"); err !=nil{
+	}else if _, err := os.Stat("/etc/os-release"); err ==  nil{
 		si.getOSInfoFromOsRelease()
 	}
 
@@ -93,5 +93,9 @@ func (si *SysInfo)getOSInfoFromOsRelease(){
 				si.OS.Release = m[1]
 			}
 		}
+	case "arch":
+		si.OS.Release="rolling"
 	}
+	
+
 }
