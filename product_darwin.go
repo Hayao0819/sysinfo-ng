@@ -40,7 +40,8 @@ func (si *SysInfo) getProductInfo() {
 	//si.Product.Serial = slurpFile("/sys/class/dmi/id/product_serial")
 
 	si.Product.Name, _=sysctl.GetString("hw.model")
-	si.Product.Vendor="Apple"
+	//si.Product.Vendor="Apple" // os.goで取得
+
 
 	si.getOSSerialNo()
 

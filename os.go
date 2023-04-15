@@ -73,6 +73,9 @@ func (si *SysInfo)getOSInfoFromDarwin(){
 	si.OS.Vendor=strings.ToLower(sysinfo.ProductName)
 	si.OS.Release=sysinfo.ProductVersion
 	si.OS.Architecture=runtime.GOARCH
+
+	//
+	si.Product.Vendor=sysinfo.ProductCopyright
 	
 
 	/*
