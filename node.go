@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/blabber/go-freebsd-sysctl/sysctl"
+	//"github.com/blabber/go-freebsd-sysctl/sysctl"
 	"github.com/thlib/go-timezone-local/tzlocal"
 )
 
@@ -127,12 +127,7 @@ func (si *SysInfo) getTimezone() {
 }
 
 func (si *SysInfo) getNodeInfo() {
-	if ostype == "darwin"{
-		si.getHostnameFromSysctl()
-	}else{
-		si.getHostnameFromProc()
-	}
-
+	si.getHostname()
 	si.getSetMachineID()
 	si.getHypervisor()
 	si.getTimezone()

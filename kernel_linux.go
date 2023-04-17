@@ -1,6 +1,7 @@
 // Copyright © 2016 Zlatko Čalušić
 //
 // Use of this source code is governed by an MIT-style license that can be found in the LICENSE file.
+// +build linux
 
 
 package sysinfo
@@ -9,7 +10,7 @@ import (
 	"strings"
 	"syscall"
 	"unsafe"
-	"github.com/blabber/go-freebsd-sysctl/sysctl"
+	//"github.com/blabber/go-freebsd-sysctl/sysctl"
 )
 
 // Kernel information.
