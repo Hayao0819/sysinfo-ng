@@ -13,7 +13,6 @@ import (
 	"strings"
 	"time"
 
-	//"github.com/blabber/go-freebsd-sysctl/sysctl"
 	"github.com/thlib/go-timezone-local/tzlocal"
 )
 
@@ -25,20 +24,6 @@ type Node struct {
 	Timezone   string `json:"timezone,omitempty"`
 }
 
-func (si *SysInfo) getHostnameFromProc() {
-	si.Node.Hostname = slurpFile("/proc/sys/kernel/hostname")
-}
-
-func (si *SysInfo) getHostnameFromSysctl(){
-	kern, _ :=  sysctl.GetString("kern.hostname")
-	kernel, _ := sysctl.GetString("kernel.hostname")
-
-	if len(kern) != 0{
-		si.Node.Hostname = kern
-	}else if len(kernel) != 0{
-		si.Node.Hostname = kernel
-	}
-}
 
 func (si *SysInfo) getSetMachineID() {
 	const pathSystemdMachineID = "/etc/machine-id"
