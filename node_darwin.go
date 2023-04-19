@@ -6,15 +6,7 @@
 package sysinfo
 
 import (
-	"bufio"
-	"crypto/rand"
-	"fmt"
-	"os"
-	"strings"
-	"time"
-
-	//"github.com/blabber/go-freebsd-sysctl/sysctl"
-	"github.com/thlib/go-timezone-local/tzlocal"
+	"github.com/blabber/go-freebsd-sysctl/sysctl"
 )
 
 
