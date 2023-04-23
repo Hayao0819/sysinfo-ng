@@ -1,4 +1,4 @@
-module github.com/zcalusic/sysinfo
+module github.com/Hayao0819/sysinfo-ng
 
 go 1.19
 
