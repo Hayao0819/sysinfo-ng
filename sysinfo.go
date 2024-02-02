@@ -33,6 +33,9 @@ var ostype string
 // GetSysInfo gathers all available system information.
 func (si *SysInfo) GetSysInfo() {
 	ostype= strings.ToLower(runtime.GOOS)
+	if ostype != "linux" {
+		return
+	}
 
 	// Meta info
 	si.getMetaInfo()
